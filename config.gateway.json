@@ -1,0 +1,117 @@
+{
+  "interfaces": {
+    "ethernet": {
+      "eth0": {
+        "description": "FTTH",
+        "vif": {
+          "3": {
+            "address": [
+              "dhcp"
+            ],
+            "description": "FTTH - VoIP",
+            "dhcp-options": {
+              "default-route": "no-update",
+              "default-route-distance": "210",
+              "name-server": "no-update"
+            }
+          },
+          "6": {
+            "description": "FTTH - WAN",
+            "dhcp-options": {
+              "default-route": "no-update",
+              "default-route-distance": "1",
+              "name-server": "no-update"
+            },
+            "pppoe": {
+              "2": {
+                "default-route": "force",
+                "firewall": {
+                  "in": {
+                    "ipv6-name": "WANv6_IN",
+                    "name": "WAN_IN"
+                  },
+                  "local": {
+                    "ipv6-name": "WANv6_LOCAL",
+                    "name": "WAN_LOCAL"
+                  },
+                  "out": {
+                    "ipv6-name": "WANv6_OUT",
+                    "name": "WAN_OUT"
+                  }
+                },
+                "name-server": "none",
+                "password": "adslppp",
+                "user-id": "adslppp@telefonicanetpa"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "port-forward": {
+    "wan-interface": "pppoe2"
+  },
+  "protocols": {
+    "rip": {
+      "interface": [
+        "eth0.3"
+      ],
+      "passive-interface": [
+        "default"
+      ]
+    }
+  },
+  "service": {
+    "dns": {
+      "dynamic": {
+        "interface": {
+          "pppoe2": {
+            "service": {
+              YOUR PROVIDER HERE
+            }
+          }
+        }
+      },
+      "forwarding": {
+        "except-interface": [
+          "pppoe2"
+        ]
+      }
+    },
+    "nat": {
+      "rule": {
+        "5000": {
+          "description": "MASQ to VoIP",
+          "log": "disable",
+          "outbound-interface": "eth0.3",
+          "protocol": "all",
+          "type": "masquerade"
+        },
+        "6001": {
+          "outbound-interface": "pppoe2"
+        },
+        "6002": {
+          "outbound-interface": "pppoe2"
+        },
+        "6003": {
+          "outbound-interface": "pppoe2"
+        }
+      }
+    }
+  },
+  "vpn": {
+    "ipsec": {
+      "ipsec-interfaces": {
+        "interface": [
+          "pppoe2"
+        ]
+      }
+    },
+    "l2tp": {
+      "remote-access": {
+        "outside-address": "0.0.0.0"
+      }
+    }
+  }
+}
