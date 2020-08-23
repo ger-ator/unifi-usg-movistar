@@ -107,10 +107,17 @@
           "pppoe2"
         ]
       }
-    },
-    "l2tp": {
-      "remote-access": {
-        "outside-address": "0.0.0.0"
+    }
+  },
+  "system": {
+    "task-scheduler": {
+      "task": {
+        "postprovision": {
+          "executable": {
+            "path": "/config/scripts/postprovision-fix.sh"
+          },
+          "interval": "2m"
+        }
       }
     }
   }
